@@ -12,7 +12,7 @@ app: Flask = Flask(__name__)
 # 🔹 PostgreSQL用設定（Render環境変数から読み込み）
 db_url = os.environ.get("DATABASE_URL")
 if db_url and db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://")
+    db_url = db_url.replace("postgres://", "postgresql+psycopg://")
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
