@@ -7,19 +7,10 @@ from flask_login import LoginManager, UserMixin, login_user, current_user, logou
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
+
 app: Flask = Flask(__name__)
 
-# 🔹 PostgreSQL用設定（Render環境変数から読み込み）
-db_url = os.environ.get("DATABASE_URL")
-if db_url and db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql+psycopg://")
-elif db_url and db_url.startswith("postgresql://") and "+psycopg" not in db_url:
-    db_url = db_url.replace("postgresql://", "postgresql+psycopg://")
-
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.secret_key = os.environ.get("SECRET_KEY", "dev_secret")
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 
 # ログインマネージャーの設定 --- (※2)
@@ -31,7 +22,7 @@ login_manager.init_app(app)
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(25))
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
